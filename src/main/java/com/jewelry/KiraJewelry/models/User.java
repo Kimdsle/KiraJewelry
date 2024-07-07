@@ -35,7 +35,7 @@ public class User {
 
     @Min(1)
     @Max(6)
-    @Column(name = "eole_id", nullable = false)
+    @Column(name = "role_id", nullable = false)
     private int role_Id;
     
     @Column(name = "status", nullable = false)

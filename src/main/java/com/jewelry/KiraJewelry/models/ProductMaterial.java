@@ -18,19 +18,19 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "productmaterial")
+@Table(name = "Product_Material")
 public class ProductMaterial {
 
    @EmbeddedId
     private ProductMaterialId id;
 
-    @JoinColumn(name="material_weight")
+    @JoinColumn(name="Material_Weight")
     private double material_Weight;
 
-    @Column(name = "q_price")
+    @Column(name = "Q_Price")
     private double q_price;
 
-    @Column(name = "o_price")
+    @Column(name = "O_Price")
     private double o_price;
 
     public double getMaterial_Weight() {

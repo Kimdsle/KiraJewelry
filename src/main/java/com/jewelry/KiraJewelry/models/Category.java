@@ -29,7 +29,7 @@ public class Category {
     private int category_Id;
 
     @NotBlank(message = "Category name is mandatory")
-    @Column(name = "category_Name", nullable = false)
+    @Column(name = "category_name", nullable = false)
     private String category_Name;
 
     @NotNull(message = "Status is mandatory")

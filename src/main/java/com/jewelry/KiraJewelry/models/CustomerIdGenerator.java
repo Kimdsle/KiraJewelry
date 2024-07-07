@@ -12,7 +12,7 @@ public class CustomerIdGenerator implements IdentifierGenerator {
 
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object obj) {
-        String query = "SELECT c.customer_id FROM customer c";
+        String query = "SELECT c.customer_Id FROM Customer c";
         Stream<String> ids = session.createQuery(query, String.class).stream();
 
         Long max = ids.map(id -> id.replace(PREFIX, ""))

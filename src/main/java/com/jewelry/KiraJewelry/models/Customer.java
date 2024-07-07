@@ -37,7 +37,7 @@ public class Customer {
     private String phoneNumber;
 
     @OneToOne
-    @JoinColumn(name = "user_Id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     public Customer(User user, String full_Name, String address, String phoneNumber) {
