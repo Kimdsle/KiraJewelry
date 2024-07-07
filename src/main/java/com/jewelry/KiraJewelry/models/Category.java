@@ -20,20 +20,20 @@ import jakarta.validation.constraints.Pattern;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "Category")
+@Table(name = "category")
 public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Category_Id")
+    @Column(name = "category_id")
     private int category_Id;
 
     @NotBlank(message = "Category name is mandatory")
-    @Column(name = "Category_Name", nullable = false)
+    @Column(name = "category_Name", nullable = false)
     private String category_Name;
 
     @NotNull(message = "Status is mandatory")
-    @Column(name = "Status", nullable = false)
+    @Column(name = "status", nullable = false)
     private boolean status;
 
     // Getters and setters

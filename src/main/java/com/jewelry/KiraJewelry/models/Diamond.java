@@ -25,7 +25,7 @@ import jakarta.validation.constraints.NotNull;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "Diamond")
+@Table(name = "diamond")
 public class Diamond {
 
     @Id

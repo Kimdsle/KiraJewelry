@@ -19,25 +19,25 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "Customer")
+@Table(name = "customer")
 public class Customer {
     @Id
     @GeneratedValue(generator = "customer-id-generator")
     @GenericGenerator(name = "customer-id-generator", strategy = "com.jewelry.KiraJewelry.models.CustomerIdGenerator")
-    @Column(name = "Customer_Id", length = 10)
+    @Column(name = "customer_id", length = 10)
     private String customer_Id;
     
-    @Column(nullable = false, name = "Full_Name")
+    @Column(nullable = false, name = "full_name")
     private String full_Name;
 
-    @Column(nullable = false, name = "Address")
+    @Column(nullable = false, name = "address")
     private String address;
 
-    @Column(nullable = false, name = "PhoneNumber")
+    @Column(nullable = false, name = "phonenumber")
     private String phoneNumber;
 
     @OneToOne
-    @JoinColumn(name = "user_Id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     public Customer(User user, String full_Name, String address, String phoneNumber) {

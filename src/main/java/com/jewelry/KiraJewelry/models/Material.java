@@ -22,7 +22,7 @@ import jakarta.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "Material")
+@Table(name = "material")
 public class Material {
 
     @Id

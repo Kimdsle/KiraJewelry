@@ -20,7 +20,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "Diamond_Price_List")
+@Table(name = "diamond_price_list")
 public class DiamondPriceList {
 
     @Id

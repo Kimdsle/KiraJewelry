@@ -24,7 +24,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "MaterialPriceList")
+@Table(name = "materialpricelist")
 public class MaterialPriceList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
