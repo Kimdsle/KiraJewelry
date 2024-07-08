@@ -182,9 +182,11 @@ public class ImageService {
 
     public List<String> listAllImages(String FOLDER_NAME) throws IOException {
         List<String> imageUrls = new ArrayList<>();
-        System.out.println("Firebase URL: " + firebaseURL);
+        System.out.println("Firebase URL: " + serviceAccount);
+        FileInputStream serviceAccount =
+                new FileInputStream(System.getenv("GOOGLE_APPLICATION_CREDENTIALS"));
 
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream(firebaseURL);
+        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream(serviceAccount);
         Credentials credentials = GoogleCredentials.fromStream(inputStream);
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         Bucket bucket = storage.get(BUCKET_NAME);
