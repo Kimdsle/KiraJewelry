@@ -49,7 +49,7 @@ public class ImageService {
             .load();
 
     // @Value("${firebase.url}")
-    private String firebaseURL = dotenv.get("FIREBASE_SERVICE_KEY");
+    private String firebaseURL = dotenv.get("GOOGLE_APPLICATION_CREDENTIALS");
 
     private String uploadFile(File file, String fileName) throws IOException {
         // Firestore db = FirestoreClient.getFirestore();
