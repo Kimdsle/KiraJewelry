@@ -42,6 +42,8 @@ public class ImageService {
     // public ImageService(FirebaseApp firebaseApp) {
     //     this.firebaseApp = firebaseApp;
     // }
+    @Value("@{firebase.url}")
+    private String firebaseURL;
 
     private String uploadFile(File file, String fileName) throws IOException {
         //Firestore db = FirestoreClient.getFirestore();
@@ -63,7 +65,7 @@ public class ImageService {
         String filePath = folderName + "/" + customerId + "_" + ProductionOrderId + "_" + fileName;
         BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", filePath); // Replace with your bucket name
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
+        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream(firebaseURL);
         Credentials credentials = GoogleCredentials.fromStream(inputStream);
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         storage.create(blobInfo, Files.readAllBytes(file.toPath()));
