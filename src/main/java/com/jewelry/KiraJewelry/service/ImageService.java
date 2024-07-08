@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,20 +37,14 @@ public class ImageService {
     private static final String BUCKET_NAME = "kirajewelry-a2n2k.appspot.com";
     private static final String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/%s?alt=media";
 
-    // private final FirebaseApp firebaseApp;
-
-    // // Inject FirebaseApp using constructor injection
-    // public ImageService(FirebaseApp firebaseApp) {
-    //     this.firebaseApp = firebaseApp;
-    // }
-    @Value("@{firebase.url}")
+    @Value("${firebase.url}")
     private String firebaseURL;
 
     private String uploadFile(File file, String fileName) throws IOException {
         //Firestore db = FirestoreClient.getFirestore();
         BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", fileName); // Replace with your bucker name
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
+        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream(firebaseURL);
         Credentials credentials = GoogleCredentials.fromStream(inputStream);
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         //Storage storage = FirebaseStorage.getInstance(firebaseApp);
@@ -83,7 +78,7 @@ public class ImageService {
                 + fileName;
         BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", filePath); // Replace with your bucket name
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
+        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream(firebaseURL);
         Credentials credentials = GoogleCredentials.fromStream(inputStream);
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         storage.create(blobInfo, Files.readAllBytes(file.toPath()));
@@ -101,7 +96,7 @@ public class ImageService {
                 + fileName;
         BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", filePath); // Replace with your bucket name
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
+        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream(firebaseURL);
         Credentials credentials = GoogleCredentials.fromStream(inputStream);
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         storage.create(blobInfo, Files.readAllBytes(file.toPath()));
@@ -130,7 +125,7 @@ public class ImageService {
 
         BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", filePath); // Replace with your bucket name
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
+        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream(firebaseURL);
         Credentials credentials = GoogleCredentials.fromStream(inputStream);
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         storage.create(blobInfo, Files.readAllBytes(file.toPath()));
@@ -146,7 +141,7 @@ public class ImageService {
         String filePath = folderName + "/" + diamondId + "_" + fileName;
         BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", filePath); // Replace with your bucket name
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
+        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream(firebaseURL);
         Credentials credentials = GoogleCredentials.fromStream(inputStream);
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         storage.create(blobInfo, Files.readAllBytes(file.toPath()));
@@ -163,7 +158,7 @@ public class ImageService {
 
         BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", filePath); // Replace with your bucket name
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
+        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream(firebaseURL);
         Credentials credentials = GoogleCredentials.fromStream(inputStream);
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         storage.create(blobInfo, Files.readAllBytes(file.toPath()));
@@ -177,7 +172,7 @@ public class ImageService {
     public List<String> listAllImages(String FOLDER_NAME) throws IOException {
         List<String> imageUrls = new ArrayList<>();
 
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
+        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream(firebaseURL);
         Credentials credentials = GoogleCredentials.fromStream(inputStream);
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         Bucket bucket = storage.get(BUCKET_NAME);
