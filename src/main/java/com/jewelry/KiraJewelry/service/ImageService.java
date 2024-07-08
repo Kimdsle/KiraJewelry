@@ -1,6 +1,7 @@
 package com.jewelry.KiraJewelry.service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,26 +15,18 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.cloud.FirestoreClient;
-import com.jewelry.KiraJewelry.dto.Image;
-
-import io.github.cdimascio.dotenv.Dotenv;
-import io.github.cdimascio.dotenv.DotenvEntry;
-
-import com.google.cloud.firestore.Firestore;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
+
+import io.github.cdimascio.dotenv.Dotenv;
 
 @Service
 public class ImageService {
@@ -43,7 +36,7 @@ public class ImageService {
 
     Dotenv dotenv = Dotenv.configure()
             .directory("src/main/resources")
-            .filename("key.env")
+            .filename("key.env") // explicitly specify the filename
             .ignoreIfMalformed()
             .ignoreIfMissing()
             .load();
@@ -110,28 +103,6 @@ public class ImageService {
         return String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
     }
 
-    public List<String> listAllImages(String folderName) throws IOException {
-        List<String> imageUrls = new ArrayList<>();
-
-        try (FileInputStream serviceAccount = new FileInputStream(firebaseURL)) {
-            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
-            Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-            Bucket bucket = storage.get(BUCKET_NAME);
-
-            Iterable<Blob> blobs = bucket.list(Storage.BlobListOption.prefix(folderName + "/")).iterateAll();
-            for (Blob blob : blobs) {
-                if (!blob.isDirectory()) {
-                    String fileName = blob.getName();
-                    String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
-                    String imageUrl = String.format(DOWNLOAD_URL, encodedFileName);
-                    imageUrls.add(imageUrl);
-                }
-            }
-        }
-
-        return imageUrls;
-    }
-
     private Image getImageByCustomerId(String savedUrl) {
         String key = savedUrl.substring(0, 6);
         String imageUrl = savedUrl.substring(6);
@@ -194,9 +165,29 @@ public class ImageService {
         System.out.println(url);
         return url;
     }
+// Other methods remain the same but with similar updates for handling credentials
+    public List<String> listAllImages(String folderName) throws IOException {
+        List<String> imageUrls = new ArrayList<>();
+        System.out.println("Firebase URL: " + firebaseURL);
 
-    
+        try (FileInputStream serviceAccount = new FileInputStream(firebaseURL)) {
+            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+            Bucket bucket = storage.get(BUCKET_NAME);
 
+            Iterable<Blob> blobs = bucket.list(Storage.BlobListOption.prefix(folderName + "/")).iterateAll();
+            for (Blob blob : blobs) {
+                if (!blob.isDirectory()) {
+                    String fileName = blob.getName();
+                    String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
+                    String imageUrl = String.format(DOWNLOAD_URL, encodedFileName);
+                    imageUrls.add(imageUrl);
+                }
+            }
+        }
+
+        return imageUrls;
+    }
     public List<String> getImgByCustomerID(String customerId, String production_order_id) throws IOException {
         List<String> listImg = listAllImages("Customer_Production_Order");
 
@@ -308,6 +299,7 @@ public class ImageService {
 
         return filteredImages;
     }
+    
 
     private File convertToFile(MultipartFile multipartFile, String fileName) throws IOException {
         File tempFile = new File(fileName);
@@ -345,7 +337,6 @@ public class ImageService {
             return "Image couldn't upload, Something went wrong";
         }
     }
-
     public String uploadForProductionOrder(MultipartFile multipartFile, String FOLDER_NAME, String key,
             String production_order_id) {
         try {
@@ -377,6 +368,7 @@ public class ImageService {
             return "Image couldn't upload, Something went wrong";
         }
     }
+    // Similar updates for other upload methods
 
     public boolean deleteImage(String imageUrl) throws IOException {
         String blobName = URLDecoder.decode(
@@ -391,3 +383,4 @@ public class ImageService {
         }
     }
 }
+
