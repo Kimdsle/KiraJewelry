@@ -27,6 +27,10 @@ import com.google.cloud.storage.StorageOptions;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.cloud.FirestoreClient;
 import com.jewelry.KiraJewelry.dto.Image;
+
+import io.github.cdimascio.dotenv.Dotenv;
+import io.github.cdimascio.dotenv.DotenvEntry;
+
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
@@ -37,17 +41,24 @@ public class ImageService {
     private static final String BUCKET_NAME = "kirajewelry-a2n2k.appspot.com";
     private static final String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/%s?alt=media";
 
-    @Value("${firebase.url}")
-    private String firebaseURL;
+    Dotenv dotenv = Dotenv.configure()
+            .directory("src/main/resources")
+            .filename("key.env") // explicitly specify the filename
+            .ignoreIfMalformed()
+            .ignoreIfMissing()
+            .load();
+
+    // @Value("${firebase.url}")
+    private String firebaseURL = dotenv.get("FIREBASE_SERVICE_KEY");
 
     private String uploadFile(File file, String fileName) throws IOException {
-        //Firestore db = FirestoreClient.getFirestore();
+        // Firestore db = FirestoreClient.getFirestore();
         BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", fileName); // Replace with your bucker name
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
         InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream(firebaseURL);
         Credentials credentials = GoogleCredentials.fromStream(inputStream);
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        //Storage storage = FirebaseStorage.getInstance(firebaseApp);
+        // Storage storage = FirebaseStorage.getInstance(firebaseApp);
         storage.create(blobInfo, Files.readAllBytes(file.toPath()));
 
         String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/%s?alt=media";
@@ -171,6 +182,7 @@ public class ImageService {
 
     public List<String> listAllImages(String FOLDER_NAME) throws IOException {
         List<String> imageUrls = new ArrayList<>();
+        System.out.println("Firebase URL: " + firebaseURL);
 
         InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream(firebaseURL);
         Credentials credentials = GoogleCredentials.fromStream(inputStream);
@@ -379,7 +391,7 @@ public class ImageService {
                 imageUrl.substring(imageUrl.indexOf("/o/") + 3, imageUrl.indexOf("?alt=media")),
                 StandardCharsets.UTF_8.toString());
 
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
+        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream(firebaseURL);
         Credentials credentials = GoogleCredentials.fromStream(inputStream);
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         BlobId blobId = BlobId.of(bucketName, blobName);
